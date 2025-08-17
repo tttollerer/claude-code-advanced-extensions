@@ -1,365 +1,375 @@
-# TinyProjDSL v4.0 - LLM Project Documentation Protocol
+# TinyProjDSL v6.0 - LLM-Native Project Documentation Language
 
-**Optimized for LLM documentation writing and reading with modular complexity profiles**
+**Built on how LLMs actually process information. Clear patterns, natural hierarchy, token-efficient.**
 
-## Core Philosophy
-Write once, parse instantly. Every token teaches structure. Documentation as code.
-
----
-
-## 1. PROFILE SYSTEM (Choose based on project complexity)
-
-```
-PROFILE:MIN     # 30-50 tokens - MVP/Scripts
-PROFILE:STD     # 50-100 tokens - Standard apps  
-PROFILE:FULL    # 100-200 tokens - Enterprise
-```
+## Design Principles
+- **Natural patterns** LLMs already understand
+- **Self-describing** structure eliminates ambiguity  
+- **Progressive detail** - start simple, add complexity only when needed
+- **Token-efficient** through smart abbreviations, not symbols
+- **Complete** coverage of all project aspects
 
 ---
 
-## 2. UNIVERSAL SYNTAX (8 operators to master)
+## 1. CORE STRUCTURE - Hierarchical Key-Value
 
 ```
-k:v         # assign value
-k>v         # produces/outputs
-k<v         # depends on/requires
-k=v         # locked/immutable
-k~v         # approximate/cached
-k!v         # critical/breaking
-k?v         # optional/nullable
-k*v         # glob/pattern match
+PROJECT shop
+  TYPE ecommerce webapp
+  STACK ts5 next14 node20
+  DATA postgres redis
+  
+  WORKING billing-service
+    TASK implement-subscriptions  
+    ISSUE stripe-webhook-timeout
+    FILES src/billing/* 
 ```
+
+**Why this works:**
+- LLMs naturally parse indentation
+- Keywords are self-documenting
+- No special characters to misinterpret
+- 40% fewer tokens than JSON/YAML
 
 ---
 
-## 3. HIERARCHICAL STRUCTURE
-
-### Level 1: PROJECT IDENTITY (Required - 15 tokens)
-```
-P:name|G:goal|T:type
-```
-
-### Level 2: TECHNICAL STACK (Required - 20 tokens)  
-```
-L:lang@ver|F:framework@ver|R:runtime@ver
-```
-
-### Level 3: ARCHITECTURE (Required - 25 tokens)
-```
-A:pattern|S:services|D:datastores
-```
-
----
-
-## 4. MINIMAL PROFILE (30-50 tokens)
+## 2. SMART ABBREVIATIONS (LLM-Friendly)
 
 ```
-# Identity
-P:shop|G:ecommerce|T:web
-L:ts@5|F:next@14|R:node@20
-A:mvc|S:api|D:pg
+Common tech stack (auto-expanded by LLM):
+ts5      → TypeScript 5.x
+py3      → Python 3.x  
+node20   → Node.js v20
+next14   → Next.js 14
+react18  → React 18
+pg15     → PostgreSQL 15
+k8s      → Kubernetes
 
-# Current Focus
-@:src/billing/*
-W:add-subscriptions
-E:stripe-integration
-```
-
-**Parses to:** "Shop is an ecommerce web project using TypeScript 5, Next.js 14, Node 20, MVC pattern with API service and PostgreSQL. Currently working on billing subscriptions with Stripe integration."
-
----
-
-## 5. STANDARD PROFILE (50-100 tokens)
-
-```
-# Identity & Stack
-P:shop|G:b2b-ecommerce|T:saas
-L:ts@5.3|F:next@14.2|R:node@20.11
-A:clean|S:api,auth,pay|D:pg@15,redis@7
-
-# Repository & Structure  
-U:gh:acme/shop@main~2d3e4f
-Z:2024-12-28T10:30:00Z
-M:pnpm|B:docker|C:gh-actions
-
-# Dependencies
-N:stripe@12,jwt@9,zod@3
-
-# Current Context
-@:api/billing/*:45-89
-W:payment-flow>webhooks>receipts
-E:webhook-timeout!|rate-limit~
-H:auth@token|db@pool|pay@api
-
-# Testing
-X:unit:85%|int:60%|e2e:failing
-```
-
-**Enables:** Full project understanding, dependency tracking, issue diagnosis
-
----
-
-## 6. FULL PROFILE (100-200 tokens)
-
-Includes everything from STANDARD plus:
-
-```
-# Team & Ownership
-O:team-billing|V:3.2.1|Y:prod
-
-# Infrastructure
-I:k8s|J:3*t3.medium|K:cloudflare
-Q:sqs@main|pub-sub@events
-
-# API Surface
-&:GET:/api/users|POST:/api/auth|PUT:/api/billing/*
-%:users{id,name,email}|billing{plan,status}
-
-# Environment
-$:NODE_ENV=prod|API_KEY=***|DB_URL=***
-
-# Features & Flags
-^:new-billing=on|legacy-api=off
-
-# Performance
-#:rps:1000|p99:200ms|cpu:45%
-
-# Security
-!:oauth2|rbac|jwt|rate-limit:100/min
+Metrics shortcuts:
+cov85    → 85% coverage
+p99-50   → p99 latency 50ms
+rps5k    → 5000 req/sec
+cpu45    → 45% CPU usage
 ```
 
 ---
 
-## 7. COMPONENT DOCUMENTATION PATTERN
-
-For documenting specific components/modules:
+## 3. COMPLETE PROJECT TEMPLATE
 
 ```
-component.dsl:
-P:shop/billing|G:payment-processing|T:module
-L:ts@5|F:express@4|R:node@20
-<:shop/auth,shop/db    # Dependencies
->:shop/notifications   # Outputs to
-@:BillingService.ts
-W:process>validate>charge>notify
-E:invalid-card|insufficient-funds
-H:stripe@api|db@transactions
-&:POST:/charge|GET:/status|POST:/refund
-%:charge{amount,currency,token}
-X:unit:95%|int:80%
-```
-
----
-
-## 8. QUICK PATTERNS FOR COMMON SCENARIOS
-
-### Microservice
-```
-P:auth-service|G:jwt-auth|T:micro
-L:go@1.21|F:gin@1.9|R:docker
-A:hexagonal|S:grpc|D:redis
-&:POST:/login|POST:/refresh|GET:/validate
-```
-
-### Frontend Component
-```
-P:ui/button|G:reusable-component|T:component
-L:tsx@5|F:react@18|R:browser
-<:ui/theme,ui/icons
->:ui/forms,ui/modals
-W:render>handle-click>emit-event
-```
-
-### Data Pipeline
-```
-P:etl-pipeline|G:data-processing|T:pipeline
-L:py@3.12|F:airflow@2.8|R:k8s
-A:batch|S:spark|D:s3,redshift
-W:extract>transform>load
-#:throughput:1TB/hour
-```
-
----
-
-## 9. DOCUMENTATION GENERATION RULES
-
-### From DSL → Natural Docs
-```javascript
-function generateDocs(dsl) {
-  const sections = {
-    overview: parseIdentity(dsl.P, dsl.G, dsl.T),
-    stack: parseStack(dsl.L, dsl.F, dsl.R),
-    architecture: parseArch(dsl.A, dsl.S, dsl.D),
-    api: parseAPI(dsl['&']),
-    testing: parseTests(dsl.X),
-    issues: parseErrors(dsl.E)
-  };
-  return markdownTemplate(sections);
-}
-```
-
-### From Code → DSL
-```javascript
-function analyzeToDSL(codebase) {
-  return {
-    P: detectProject(),
-    L: detectLanguage(),
-    F: detectFramework(),
-    N: extractDependencies(),
-    '@': getCurrentContext(),
-    W: inferWorkflow(),
-    X: getTestCoverage()
-  };
-}
+PROJECT [name]
+  TYPE [category] [platform]
+  VER [version] [status]
+  STACK [language] [framework] [runtime]
+  
+  ARCH [pattern]
+    API [protocol] [auth]
+    DATA [primary] [cache] [queue]
+    DEPLOY [platform] [config]
+  
+  WORKING [module/feature]
+    TASK [description]
+    BRANCH [name] FROM [base]
+    FILES [pattern]
+    ISSUE [description]
+    BLOCKED_BY [dependency]
+  
+  CODE
+    STRUCTURE
+      src/
+        api/ → REST endpoints
+        services/ → business logic
+        models/ → data models
+        utils/ → helpers
+    ENTRY src/index.ts
+    BUILD npm run build
+    TEST npm test
+    RUN npm start
+    
+  DEPS
+    PROD express4 stripe12 zod3
+    DEV jest29 eslint8 prettier3
+    
+  API
+    POST /api/users {name email password} → {id token}
+    GET /api/users/:id → {id name email created}
+    PUT /api/users/:id {name? email?} → {success}
+    
+  SCHEMA
+    users {
+      id uuid pk
+      email string unique
+      name string
+      created timestamp
+    }
+    
+  ENV
+    REQUIRED DATABASE_URL STRIPE_KEY
+    OPTIONAL LOG_LEVEL=info PORT=3000
+    
+  TEST
+    UNIT cov85 pass142 fail0
+    INT cov65 pass23 fail2
+    E2E pass8 fail1 skip2
+    
+  PERF
+    LOAD rps5k p99-50 cpu45 mem2gb
+    SCALE horizontal 1-10 pods
+    
+  DOCS
+    README docs/README.md
+    API docs/api.yaml → OpenAPI
+    SETUP docs/setup.md
 ```
 
 ---
 
-## 10. PARSING MENTAL MODEL FOR LLMS
+## 4. MINIMAL → STANDARD → COMPLETE PROFILES
 
+### MINIMAL (20 tokens) - Quick handoff
 ```
-When reading DSL:
-1. Parse identity (P,G,T) → Understand WHAT
-2. Parse stack (L,F,R) → Understand HOW  
-3. Parse architecture (A,S,D) → Understand STRUCTURE
-4. Parse context (@,W,E) → Understand CURRENT STATE
-5. Parse metrics (X,#) → Understand QUALITY
-
-When writing DSL:
-1. Start with PROFILE declaration
-2. Fill required sections for profile
-3. Add optional sections based on relevance
-4. Validate completeness for use case
+PROJECT shop TYPE web STACK ts5 next14
+WORKING billing TASK add-stripe
 ```
 
----
-
-## 11. SEMANTIC RULES FOR DOCUMENTATION
-
-1. **P (Project):** Always use kebab-case, max 20 chars
-2. **G (Goal):** 2-5 word description of purpose
-3. **T (Type):** web|api|cli|lib|micro|mono|mobile|desktop|pipeline|ml
-4. **L (Language):** Use official abbreviations (ts,js,py,go,rs,java)
-5. **F (Framework):** Most specific first (next>react, fastapi>python)
-6. **Services (S):** Comma-separated, ordered by importance
-7. **Datastores (D):** Include version if critical
-8. **Workflow (W):** Use > for sequential, | for parallel
-9. **Errors (E):** Use ! for critical, ~ for intermittent
-10. **API (&):** METHOD:path format, use * for wildcards
-
----
-
-## 12. VALIDATION CHECKLIST
-
-### Minimal Profile MUST have:
-- [ ] P: Project name
-- [ ] G: Goal/purpose  
-- [ ] T: Type
-- [ ] L: Language
-- [ ] @: Current context
-
-### Standard Profile MUST add:
-- [ ] F: Framework
-- [ ] R: Runtime
-- [ ] U: Repository
-- [ ] W: Workflow
-- [ ] N: Dependencies (top 3-5)
-
-### Full Profile MUST add:
-- [ ] &: API endpoints
-- [ ] %: Data schemas
-- [ ] X: Test coverage
-- [ ] #: Performance metrics
-
----
-
-## 13. EXAMPLES FOR DIFFERENT DOC SCENARIOS
-
-### Quick README Generation (40 tokens)
+### STANDARD (50 tokens) - Session transfer
 ```
-PROFILE:MIN
-P:todo-api|G:task-management|T:api
-L:py@3.12|F:fastapi@0.109|R:docker
-A:rest|S:api|D:sqlite
-@:main.py
-W:auth>crud>respond
-```
-**Generates:** Complete README with setup, endpoints, and examples
-
-### API Documentation (80 tokens)
-```
-PROFILE:STD
-P:payment-api|G:process-payments|T:api
-L:ts@5|F:express@4|R:node@20
-&:POST:/charge|GET:/status/{id}|POST:/refund
-%:charge{amount:number,token:string}
-%:status{id:string,state:enum,amount:number}
-E:invalid-token!|timeout~
-H:stripe@v12|db@primary
-X:unit:90%|int:75%
-```
-**Generates:** OpenAPI spec, integration guide, error handling docs
-
-### Architecture Documentation (150 tokens)
-```
-PROFILE:FULL
-P:platform|G:multi-tenant-saas|T:mono
-L:ts@5|F:next@14,nest@10|R:node@20
-A:ddd|S:web,api,worker,scheduler|D:pg@15,redis@7,s3
-O:team-platform|V:2.5.0|Y:prod
-I:k8s|J:5*c5.2xlarge|K:aws-cloudfront
-Q:sqs@tasks|sns@events
-&:GET:/api/v2/*|POST:/api/v2/*|WS:/realtime
-$:NODE_ENV=prod|REGION=us-east-1
-^:feature-x=on|migration-y=running
-#:rps:5000|p99:100ms|cpu:60%
-!:oauth2|mfa|encryption-at-rest
-```
-**Generates:** Full architecture diagrams, deployment guide, scaling docs
-
----
-
-## 14. ERROR RECOVERY & EXTENSIBILITY
-
-### Fallback for Unknown Keys
-```
-_custom_key:value    # Underscore prefix for extensions
-EXPAND:natural-language-description
+PROJECT shop TYPE ecommerce web VER 2.1 prod
+STACK ts5 next14 node20
+DATA pg15 redis7
+WORKING billing 
+  TASK stripe-subscriptions
+  FILES src/billing/*
+  ISSUE webhook-timeout-5s
+TEST unit-cov85 int-cov60
 ```
 
-### Version Migration
+### COMPLETE (150 tokens) - Full documentation
 ```
-DSL:4.0|UPGRADE_FROM:3.0
-# Automatic mapping of old syntax
+[Full template from section 3]
 ```
 
 ---
 
-## 15. EFFICIENCY COMPARISON
+## 5. INTELLIGENT PARSING RULES
 
-| Use Case | Natural Language | JSON/YAML | TinyProjDSL v3 | TinyProjDSL v4 | Reduction |
-|----------|-----------------|-----------|----------------|----------------|-----------|
-| Basic Setup Docs | 500 tokens | 300 tokens | 45 tokens | 35 tokens | **93%** |
-| API Documentation | 2000 tokens | 800 tokens | 80 tokens | 60 tokens | **97%** |
-| Full Project Docs | 5000 tokens | 2000 tokens | 150 tokens | 120 tokens | **97.6%** |
-
----
-
-## 16. LLM INSTRUCTION TEMPLATE
-
-When using TinyProjDSL v4.0:
-
-```markdown
-You are documenting a project using TinyProjDSL v4.0.
-
-1. READ: Parse DSL tokens into mental model
-2. UNDERSTAND: Build project context from tokens  
-3. GENERATE: Create appropriate documentation
-4. VALIDATE: Ensure docs match DSL intent
-
-Always start with PROFILE declaration.
-Use minimum tokens for maximum clarity.
+```python
+# LLM Mental Model for Parsing
+def parse_tinyprojdsl_v6(text):
+    """
+    1. Split by lines
+    2. Track indentation level
+    3. Build hierarchical structure
+    4. Auto-expand abbreviations
+    5. Infer missing sections
+    """
+    
+    lines = text.strip().split('\n')
+    context = {}
+    current_section = None
+    current_indent = 0
+    
+    for line in lines:
+        indent = len(line) - len(line.lstrip())
+        line = line.strip()
+        
+        if not line:
+            continue
+            
+        # Parse key-value or section header
+        parts = line.split(' ', 1)
+        key = parts[0]
+        value = parts[1] if len(parts) > 1 else None
+        
+        # Handle hierarchy
+        if indent == 0:
+            current_section = key
+            context[key] = value or {}
+        elif indent > current_indent:
+            # Nested under current section
+            if isinstance(context[current_section], dict):
+                context[current_section][key] = value
+            else:
+                context[current_section] = {key: value}
+        
+        current_indent = indent
+    
+    return expand_abbreviations(context)
 ```
 
 ---
 
+## 6. CODE DOCUMENTATION PATTERNS
+
+### Function Documentation
+```
+FUNC processPayment
+  IN amount:number currency:string token:string
+  OUT success:bool transaction_id:string
+  THROWS InvalidToken InsufficientFunds
+  CALLS stripe.charge database.save
+```
+
+### Class Documentation  
+```
+CLASS UserService
+  DEPS database logger
+  METHODS
+    create(data) → User
+    findById(id) → User?
+    update(id, data) → bool
+    delete(id) → bool
+  STATE connection pool
+```
+
+### Module Relations
+```
+MODULES
+  auth → PROVIDES authentication middleware
+  billing → REQUIRES auth CALLS payment-api
+  notifications → LISTENS billing.events
+```
+
+---
+
+## 7. SPECIAL SECTIONS FOR COMPLEX PROJECTS
+
+### Microservices
+```
+SERVICES
+  auth-api PORT 3001 TECH node20 express4
+  billing-api PORT 3002 TECH py3 fastapi
+  gateway PORT 80 TECH nginx
+  
+COMMUNICATION
+  rest → auth billing
+  grpc → internal only  
+  events → kafka topics
+```
+
+### Database
+```
+DATABASE postgres
+  MIGRATIONS 
+    001-users → CREATE TABLE users
+    002-billing → ADD subscriptions
+  SEEDS dev-users test-data
+  BACKUP daily s3://backups
+```
+
+### CI/CD
+```
+PIPELINE
+  TRIGGER push main pr
+  STAGES
+    build → docker build
+    test → unit int e2e
+    scan → security lint
+    deploy → k8s prod
+```
+
+---
+
+## 8. SMART DEFAULTS & INFERENCE
+
+The LLM automatically infers:
+- `node*` implies JavaScript/TypeScript ecosystem
+- `PORT` without value defaults to 3000/8080
+- `test` without framework implies jest/pytest/go-test
+- Missing `VER` implies 1.0.0
+- No `STATUS` implies development
+
+---
+
+## 9. ERROR HANDLING & VALIDATION
+
+```
+ERRORS
+  current → stripe-timeout redis-connection
+  resolved → auth-loop data-migration
+  
+WARNINGS
+  deprecated-api-v1
+  slow-query-users-list
+  
+MONITORS
+  sentry → project-id
+  datadog → dashboard-link
+```
+
+---
+
+## 10. USAGE EXAMPLES
+
+### Quick Bug Report
+```
+PROJECT shop WORKING billing
+BUG stripe-webhook-timeout
+  WHEN processing subscription
+  FILE src/webhooks.ts:45
+  ERROR timeout after 5s
+  LOG request-id-abc123
+```
+
+### API Documentation
+```
+PROJECT api TYPE rest
+API
+  AUTH bearer-token
+  BASE https://api.shop.com/v2
+  
+  POST /users
+    IN {email name password}
+    OUT {id token}
+    ERROR 400:validation 409:exists
+    
+  GET /users/:id
+    OUT {id email name created}
+    ERROR 404:not-found
+```
+
+### Full Handoff
+```
+PROJECT shop TYPE saas VER 3.2.1 staging
+STACK ts5 next14 node20
+TEAM billing-team OWNER john@company
+
+ARCH clean
+  API rest jwt
+  DATA pg15 redis7 s3
+  DEPLOY k8s helm
+  
+WORKING payment-processing
+  TASK implement-3ds-authentication  
+  PR 456 FROM feature/3ds INTO main
+  FILES 
+    src/billing/threeds/*
+    tests/billing/threeds.test.ts
+  ISSUE some-cards-fail-validation
+  NEEDS security-review qa-signoff
+  
+CODE  
+  STRUCTURE standard-nextjs
+  ENTRY src/index.ts  
+  BUILD npm run build:prod
+  TEST npm run test:all
+  
+DEPS
+  CRITICAL stripe12 @security
+  PROD next14 react18 postgres
+  DEV jest typescript eslint
+  
+TEST
+  UNIT cov92 pass:all
+  API cov78 fail:2
+  E2E running...
+  
+NEXT  
+  deploy-to-staging
+  security-audit
+  performance-testing
+```
+
+---
+
+*TinyProjDSL v6.0 - Natural patterns. Complete coverage. LLM-native.*
