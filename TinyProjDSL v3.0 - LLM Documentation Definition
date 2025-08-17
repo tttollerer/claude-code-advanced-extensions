@@ -1,0 +1,365 @@
+# TinyProjDSL v4.0 - LLM Project Documentation Protocol
+
+**Optimized for LLM documentation writing and reading with modular complexity profiles**
+
+## Core Philosophy
+Write once, parse instantly. Every token teaches structure. Documentation as code.
+
+---
+
+## 1. PROFILE SYSTEM (Choose based on project complexity)
+
+```
+PROFILE:MIN     # 30-50 tokens - MVP/Scripts
+PROFILE:STD     # 50-100 tokens - Standard apps  
+PROFILE:FULL    # 100-200 tokens - Enterprise
+```
+
+---
+
+## 2. UNIVERSAL SYNTAX (8 operators to master)
+
+```
+k:v         # assign value
+k>v         # produces/outputs
+k<v         # depends on/requires
+k=v         # locked/immutable
+k~v         # approximate/cached
+k!v         # critical/breaking
+k?v         # optional/nullable
+k*v         # glob/pattern match
+```
+
+---
+
+## 3. HIERARCHICAL STRUCTURE
+
+### Level 1: PROJECT IDENTITY (Required - 15 tokens)
+```
+P:name|G:goal|T:type
+```
+
+### Level 2: TECHNICAL STACK (Required - 20 tokens)  
+```
+L:lang@ver|F:framework@ver|R:runtime@ver
+```
+
+### Level 3: ARCHITECTURE (Required - 25 tokens)
+```
+A:pattern|S:services|D:datastores
+```
+
+---
+
+## 4. MINIMAL PROFILE (30-50 tokens)
+
+```
+# Identity
+P:shop|G:ecommerce|T:web
+L:ts@5|F:next@14|R:node@20
+A:mvc|S:api|D:pg
+
+# Current Focus
+@:src/billing/*
+W:add-subscriptions
+E:stripe-integration
+```
+
+**Parses to:** "Shop is an ecommerce web project using TypeScript 5, Next.js 14, Node 20, MVC pattern with API service and PostgreSQL. Currently working on billing subscriptions with Stripe integration."
+
+---
+
+## 5. STANDARD PROFILE (50-100 tokens)
+
+```
+# Identity & Stack
+P:shop|G:b2b-ecommerce|T:saas
+L:ts@5.3|F:next@14.2|R:node@20.11
+A:clean|S:api,auth,pay|D:pg@15,redis@7
+
+# Repository & Structure  
+U:gh:acme/shop@main~2d3e4f
+Z:2024-12-28T10:30:00Z
+M:pnpm|B:docker|C:gh-actions
+
+# Dependencies
+N:stripe@12,jwt@9,zod@3
+
+# Current Context
+@:api/billing/*:45-89
+W:payment-flow>webhooks>receipts
+E:webhook-timeout!|rate-limit~
+H:auth@token|db@pool|pay@api
+
+# Testing
+X:unit:85%|int:60%|e2e:failing
+```
+
+**Enables:** Full project understanding, dependency tracking, issue diagnosis
+
+---
+
+## 6. FULL PROFILE (100-200 tokens)
+
+Includes everything from STANDARD plus:
+
+```
+# Team & Ownership
+O:team-billing|V:3.2.1|Y:prod
+
+# Infrastructure
+I:k8s|J:3*t3.medium|K:cloudflare
+Q:sqs@main|pub-sub@events
+
+# API Surface
+&:GET:/api/users|POST:/api/auth|PUT:/api/billing/*
+%:users{id,name,email}|billing{plan,status}
+
+# Environment
+$:NODE_ENV=prod|API_KEY=***|DB_URL=***
+
+# Features & Flags
+^:new-billing=on|legacy-api=off
+
+# Performance
+#:rps:1000|p99:200ms|cpu:45%
+
+# Security
+!:oauth2|rbac|jwt|rate-limit:100/min
+```
+
+---
+
+## 7. COMPONENT DOCUMENTATION PATTERN
+
+For documenting specific components/modules:
+
+```
+component.dsl:
+P:shop/billing|G:payment-processing|T:module
+L:ts@5|F:express@4|R:node@20
+<:shop/auth,shop/db    # Dependencies
+>:shop/notifications   # Outputs to
+@:BillingService.ts
+W:process>validate>charge>notify
+E:invalid-card|insufficient-funds
+H:stripe@api|db@transactions
+&:POST:/charge|GET:/status|POST:/refund
+%:charge{amount,currency,token}
+X:unit:95%|int:80%
+```
+
+---
+
+## 8. QUICK PATTERNS FOR COMMON SCENARIOS
+
+### Microservice
+```
+P:auth-service|G:jwt-auth|T:micro
+L:go@1.21|F:gin@1.9|R:docker
+A:hexagonal|S:grpc|D:redis
+&:POST:/login|POST:/refresh|GET:/validate
+```
+
+### Frontend Component
+```
+P:ui/button|G:reusable-component|T:component
+L:tsx@5|F:react@18|R:browser
+<:ui/theme,ui/icons
+>:ui/forms,ui/modals
+W:render>handle-click>emit-event
+```
+
+### Data Pipeline
+```
+P:etl-pipeline|G:data-processing|T:pipeline
+L:py@3.12|F:airflow@2.8|R:k8s
+A:batch|S:spark|D:s3,redshift
+W:extract>transform>load
+#:throughput:1TB/hour
+```
+
+---
+
+## 9. DOCUMENTATION GENERATION RULES
+
+### From DSL → Natural Docs
+```javascript
+function generateDocs(dsl) {
+  const sections = {
+    overview: parseIdentity(dsl.P, dsl.G, dsl.T),
+    stack: parseStack(dsl.L, dsl.F, dsl.R),
+    architecture: parseArch(dsl.A, dsl.S, dsl.D),
+    api: parseAPI(dsl['&']),
+    testing: parseTests(dsl.X),
+    issues: parseErrors(dsl.E)
+  };
+  return markdownTemplate(sections);
+}
+```
+
+### From Code → DSL
+```javascript
+function analyzeToDSL(codebase) {
+  return {
+    P: detectProject(),
+    L: detectLanguage(),
+    F: detectFramework(),
+    N: extractDependencies(),
+    '@': getCurrentContext(),
+    W: inferWorkflow(),
+    X: getTestCoverage()
+  };
+}
+```
+
+---
+
+## 10. PARSING MENTAL MODEL FOR LLMS
+
+```
+When reading DSL:
+1. Parse identity (P,G,T) → Understand WHAT
+2. Parse stack (L,F,R) → Understand HOW  
+3. Parse architecture (A,S,D) → Understand STRUCTURE
+4. Parse context (@,W,E) → Understand CURRENT STATE
+5. Parse metrics (X,#) → Understand QUALITY
+
+When writing DSL:
+1. Start with PROFILE declaration
+2. Fill required sections for profile
+3. Add optional sections based on relevance
+4. Validate completeness for use case
+```
+
+---
+
+## 11. SEMANTIC RULES FOR DOCUMENTATION
+
+1. **P (Project):** Always use kebab-case, max 20 chars
+2. **G (Goal):** 2-5 word description of purpose
+3. **T (Type):** web|api|cli|lib|micro|mono|mobile|desktop|pipeline|ml
+4. **L (Language):** Use official abbreviations (ts,js,py,go,rs,java)
+5. **F (Framework):** Most specific first (next>react, fastapi>python)
+6. **Services (S):** Comma-separated, ordered by importance
+7. **Datastores (D):** Include version if critical
+8. **Workflow (W):** Use > for sequential, | for parallel
+9. **Errors (E):** Use ! for critical, ~ for intermittent
+10. **API (&):** METHOD:path format, use * for wildcards
+
+---
+
+## 12. VALIDATION CHECKLIST
+
+### Minimal Profile MUST have:
+- [ ] P: Project name
+- [ ] G: Goal/purpose  
+- [ ] T: Type
+- [ ] L: Language
+- [ ] @: Current context
+
+### Standard Profile MUST add:
+- [ ] F: Framework
+- [ ] R: Runtime
+- [ ] U: Repository
+- [ ] W: Workflow
+- [ ] N: Dependencies (top 3-5)
+
+### Full Profile MUST add:
+- [ ] &: API endpoints
+- [ ] %: Data schemas
+- [ ] X: Test coverage
+- [ ] #: Performance metrics
+
+---
+
+## 13. EXAMPLES FOR DIFFERENT DOC SCENARIOS
+
+### Quick README Generation (40 tokens)
+```
+PROFILE:MIN
+P:todo-api|G:task-management|T:api
+L:py@3.12|F:fastapi@0.109|R:docker
+A:rest|S:api|D:sqlite
+@:main.py
+W:auth>crud>respond
+```
+**Generates:** Complete README with setup, endpoints, and examples
+
+### API Documentation (80 tokens)
+```
+PROFILE:STD
+P:payment-api|G:process-payments|T:api
+L:ts@5|F:express@4|R:node@20
+&:POST:/charge|GET:/status/{id}|POST:/refund
+%:charge{amount:number,token:string}
+%:status{id:string,state:enum,amount:number}
+E:invalid-token!|timeout~
+H:stripe@v12|db@primary
+X:unit:90%|int:75%
+```
+**Generates:** OpenAPI spec, integration guide, error handling docs
+
+### Architecture Documentation (150 tokens)
+```
+PROFILE:FULL
+P:platform|G:multi-tenant-saas|T:mono
+L:ts@5|F:next@14,nest@10|R:node@20
+A:ddd|S:web,api,worker,scheduler|D:pg@15,redis@7,s3
+O:team-platform|V:2.5.0|Y:prod
+I:k8s|J:5*c5.2xlarge|K:aws-cloudfront
+Q:sqs@tasks|sns@events
+&:GET:/api/v2/*|POST:/api/v2/*|WS:/realtime
+$:NODE_ENV=prod|REGION=us-east-1
+^:feature-x=on|migration-y=running
+#:rps:5000|p99:100ms|cpu:60%
+!:oauth2|mfa|encryption-at-rest
+```
+**Generates:** Full architecture diagrams, deployment guide, scaling docs
+
+---
+
+## 14. ERROR RECOVERY & EXTENSIBILITY
+
+### Fallback for Unknown Keys
+```
+_custom_key:value    # Underscore prefix for extensions
+EXPAND:natural-language-description
+```
+
+### Version Migration
+```
+DSL:4.0|UPGRADE_FROM:3.0
+# Automatic mapping of old syntax
+```
+
+---
+
+## 15. EFFICIENCY COMPARISON
+
+| Use Case | Natural Language | JSON/YAML | TinyProjDSL v3 | TinyProjDSL v4 | Reduction |
+|----------|-----------------|-----------|----------------|----------------|-----------|
+| Basic Setup Docs | 500 tokens | 300 tokens | 45 tokens | 35 tokens | **93%** |
+| API Documentation | 2000 tokens | 800 tokens | 80 tokens | 60 tokens | **97%** |
+| Full Project Docs | 5000 tokens | 2000 tokens | 150 tokens | 120 tokens | **97.6%** |
+
+---
+
+## 16. LLM INSTRUCTION TEMPLATE
+
+When using TinyProjDSL v4.0:
+
+```markdown
+You are documenting a project using TinyProjDSL v4.0.
+
+1. READ: Parse DSL tokens into mental model
+2. UNDERSTAND: Build project context from tokens  
+3. GENERATE: Create appropriate documentation
+4. VALIDATE: Ensure docs match DSL intent
+
+Always start with PROFILE declaration.
+Use minimum tokens for maximum clarity.
+```
+
+---
+
